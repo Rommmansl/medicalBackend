@@ -54,13 +54,13 @@ async function runMigrations() {
       }
     }
     // Хешируем пароль
-    const hashedPassword = await bcrypt.hash('adminPassword', 10);
+    const hashedPassword = await bcrypt.hash(process.env.ADMIN_PASSWORD, 10);
     
     // Создаем пользователя
     
     const t = await client.query(
-        `INSERT INTO users (email, password, role, active) VALUES ('Admin', $1, 'admin', true) RETURNING *`,
-        [ hashedPassword ]
+        `INSERT INTO users (email, password, role, active) VALUES ($1, $2, 'admin', true) RETURNING *`,
+        [ process.env.ADMIN_NAME, hashedPassword ]
     );
     await client.query('COMMIT');
     
